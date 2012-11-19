@@ -10,7 +10,7 @@ describe("Acierta numero al azar", function(){
 
 	it("acierta numero a la primera", function(){
 		var resultado = juego.esAcertado(5);
-		expect(resultado).toEqual(1);
+		expect(resultado).toEqual("acierto");
 	});
 
 	it("numero a adivinar es mayor que el numero elegido", function(){
@@ -27,6 +27,7 @@ describe("Acierta numero al azar", function(){
 		var resultado = juego.esAcertado(7);
 		resultado = juego.esAcertado(3);
 		resultado = juego.esAcertado(5);
-		expect(resultado).toEqual(3);
+		expect(resultado).toEqual("acierto");
+		expect(juego.getIntentos()).toEqual(3);
 	});
 })
