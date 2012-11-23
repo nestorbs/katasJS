@@ -44,39 +44,35 @@ Partido.prototype = {
 		return this.set;
 	},
 	punto: function(numeroJugador){
+		var jugadorQuePuntua;
+		var jugadorNoPuntua;
+		var visitante = 0;
 		if(numeroJugador == this.JUGADOR1){
-			if(this.jugador1.getPuntuacion() == 40){
-				if(this.jugador2.getPuntuacion() == 40){
-					if(this.jugador1.tieneVentaja()){
-						this.set[0]++;
+			jugadorQuePuntua = this.jugador1;
+			jugadorNoPuntua = this.jugador2;
+		}else{
+			jugadorQuePuntua = this.jugador2;
+			jugadorNoPuntua = this.jugador1;
+			visitante = 1;
+		}
+		this.actualizaMarcador(jugadorQuePuntua, jugadorNoPuntua, visitante);
+	},
+	actualizaMarcador: function(jugadorQuePuntua, jugadorNoPuntua, visitante){
+		if(jugadorQuePuntua.getPuntuacion() == 40){
+				if(jugadorNoPuntua.getPuntuacion() == 40){
+					if(jugadorQuePuntua.tieneVentaja()){
+						this.set[visitante]++;
 						this.iniciaJuego();
 					}else{
-						this.jugador1.setVentaja(true);
+						jugadorQuePuntua.setVentaja(true);
 					}
 				}else{
-					this.set[0]++;
+					this.set[visitante]++;
 					this.iniciaJuego();
 				}
 			}else{
-				this.jugador1.puntua();
+				jugadorQuePuntua.puntua();
 			}
-		}else{
-			if(this.jugador2.getPuntuacion() == 40){
-				if(this.jugador1.getPuntuacion() == 40){
-					if(this.jugador2.tieneVentaja()){
-						this.set[1]++;
-						this.iniciaJuego();
-					}else{
-						this.jugador2.setVentaja(true);
-					}
-				}else{
-					this.set[1]++;
-					this.iniciaJuego();
-				}	
-			}else{
-				this.jugador2.puntua();
-			}
-		}
 	},
 	getMarcadorJuego: function(){
 		if(this.jugador1.tieneVentaja()){

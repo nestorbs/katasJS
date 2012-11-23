@@ -56,11 +56,8 @@ describe("kata tennis", function(){
 
 	it("jugador 2 puntua dos veces, una para tener ventaja y otra para ganar juego", function(){
 		var partido = new Partido([0,0], 40, 40);
-		alert(partido.getSet());
 		partido.punto(2);
-		alert(partido.getSet());
 		partido.punto(2);
-		alert(partido.getSet());
 		expect(partido.getSet()).toEqual([0,1]);
 		expect(partido.getMarcadorJuego()).toEqual("0,0");
 	});
