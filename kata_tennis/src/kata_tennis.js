@@ -26,7 +26,7 @@ Jugador.prototype = {
 		return this.puntuacion;
 	},
 	setPuntuacion: function(puntos){
-		return this.puntuacion = puntos;
+		this.puntuacion = puntos;
 	}
 };
 
@@ -64,7 +64,11 @@ Partido.prototype = {
 						this.set[visitante]++;
 						this.iniciaJuego();
 					}else{
-						jugadorQuePuntua.setVentaja(true);
+						if(jugadorNoPuntua.tieneVentaja()){
+							jugadorNoPuntua.setVentaja(false);
+						}else{
+							jugadorQuePuntua.setVentaja(true);
+						}
 					}
 				}else{
 					this.set[visitante]++;
@@ -91,6 +95,22 @@ Partido.prototype = {
 		this.jugador2.setPuntuacion(0);
 		this.jugador1.setVentaja(false);
 		this.jugador2.setVentaja(false);
+	},
+	sigueEnJuego: function(){
+		if(this.set[0] < 6 && this.set[1] < 6){
+			return true;
+		}else{
+			return false;
+		}	
 	}
-	
 }
+
+//Inicio del partido
+var partido = new Partido([0,0], 0, 0);
+var quienPuntua = 1;
+do{
+	quienPuntua = prompt("Introduzca el numero de jugador que ha marcado un punto (1 o 2)", "1");
+	partido.punto(quienPuntua);
+	alert("Set: " + partido.getSet() + ", Juego: jugador 1, jugador 2 --> " + partido.getMarcadorJuego());
+}while(partido.sigueEnJuego());
+alert("Final del partido: " + partido.getSet())

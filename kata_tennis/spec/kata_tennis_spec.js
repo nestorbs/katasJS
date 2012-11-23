@@ -61,4 +61,12 @@ describe("kata tennis", function(){
 		expect(partido.getSet()).toEqual([0,1]);
 		expect(partido.getMarcadorJuego()).toEqual("0,0");
 	});
+
+	it("jugador 2 puntua para tener ventaja y seguidamente el jugador 1 consigue iguales", function(){
+		var partido = new Partido([0,0], 40, 40);
+		partido.punto(2);
+		partido.punto(1);
+		expect(partido.getSet()).toEqual([0,0]);
+		expect(partido.getMarcadorJuego()).toEqual("IGUALES");
+	});
 });
