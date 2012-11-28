@@ -1,72 +1,105 @@
 describe("kata tennis", function(){
+	
+	describe("game",function(){
+		var game;
+		beforeEach(function(){
+			game = new Game();
+		});
 
-	it("puntua jugador", function(){
-		var jugador = new Jugador(0);
-		expect(jugador.puntua()).toEqual(15);
-		expect(jugador.puntua()).toEqual(30);
-		expect(jugador.puntua()).toEqual(40);
+		it("game point local player", function(){
+			expect(game.pointLocal()).toEqual([15,0]);
+			expect(game.pointLocal()).toEqual([30,0]);
+			expect(game.pointLocal()).toEqual([40,0]);
+		});
+
+		it("local player gets ADVANTAGE", function(){
+			game.setScoreGame(["DEUCE","DEUCE"]);
+			expect(game.pointLocal()).toEqual(["ADVANTAGE",40]);
+		});
+
+		it("game point visitor player", function(){
+			expect(game.pointVisitor()).toEqual([0,15]);
+			expect(game.pointVisitor()).toEqual([0,30]);
+			expect(game.pointVisitor()).toEqual([0,40]);
+		});
+
+		it("visitor player gets ADVANTAGE", function(){
+			game.setScoreGame(["DEUCE","DEUCE"]);
+			expect(game.pointVisitor()).toEqual([40,"ADVANTAGE"]);
+		});
+
+		it("local player gets DEUCE", function(){
+			game.setScoreGame([30,40]);
+			expect(game.pointLocal()).toEqual(["DEUCE","DEUCE"]);
+		});
+
+		it("visitor player gets DEUCE", function(){
+			game.setScoreGame([40,30]);
+			expect(game.pointVisitor()).toEqual(["DEUCE","DEUCE"]);
+		});
+
+		it("local player wins a game", function(){
+			game.setScoreGame([40,30]);
+			expect(game.pointLocal()).toEqual(["WIN",0]);
+		});
+
+		it("local player wins a game after ADVANTAGE", function(){
+			game.setScoreGame(["ADVANTAGE",40]);
+			expect(game.pointLocal()).toEqual(["WIN",0]);
+		});
+
+		it("visitor player wins a game", function(){
+			game.setScoreGame([30,40]);
+			expect(game.pointVisitor()).toEqual([0,"WIN"]);
+		});
 	});
 
-	it("jugador consigue ventaja", function(){
-		var jugador = new Jugador();
-		jugador.setVentaja(true);
-		expect(jugador.tieneVentaja()).toEqual(true);
+	describe("set", function(){
+		var set;
+		beforeEach(function(){
+			set = new Set();
+		});
+		it("local player add a game to the set", function(){
+			expect(set.localAddGame()).toEqual([1,0]);
+		});
+
+		it("visitor player add a game to the set", function(){
+			expect(set.visitorAddGame()).toEqual([0,1]);
+		});
+
+		it("local player wins the set", function(){
+			set.setScoreSet([5,0]);
+			expect(set.localAddGame()).toEqual([6,0]);
+			expect(set.areThereWinner()).toEqual("LOCAL");
+		});
 	});
 
-	it("jugador 1 gana juego a jugador 2 con marcador de juego 40 / 30", function(){
-		var partido = new Partido([0,0], 40, 30);
-		partido.punto(1);
-		expect(partido.getSet()).toEqual([1,0]);
-	});
+	describe("match", function(){
+		var match;
+		beforeEach(function(){
+			match = new Match();
+		});
 
-	it("jugador 2 gana juego a jugador 1 con marcador de juego 30 / 40", function(){
-		var partido = new Partido([0,0], 30, 40);
-		partido.punto(2);
-		expect(partido.getSet()).toEqual([0,1]);
-	});
+		it("get score set and score game", function(){
+			match.setScoreMatch([3,5], [40,30]);
+			expect(match.getScoreMatch()).toEqual("Set: 3,5 Game: 40,30");
+		});
 
-	it("jugador 1 puntua con marcador de juego 30/40 alcanzado el juego iguales deuce", function(){
-		var partido = new Partido([0,0], 30, 40);
-		partido.punto(1);
-		expect(partido.getSet()).toEqual([0,0]);
-		expect(partido.getMarcadorJuego()).toEqual("IGUALES");
-	});
+		it("end of match, local player wins", function(){
+			match.setScoreMatch([6,3], [0,0]);
+			expect(match.endOfMatch()).toEqual("LOCAL");
+		});
 
-	it("jugador 2 puntua con marcador de juego 40/30 alcanzado el juego iguales deuce", function(){
-		var partido = new Partido([0,0], 40, 30);
-		partido.punto(2);
-		expect(partido.getSet()).toEqual([0,0]);
-		expect(partido.getMarcadorJuego()).toEqual("IGUALES");
-	});
+		it("game point local player", function(){
+			match.setScoreMatch([0,0], [40,0]);
+			match.pointLocal();
+			expect(match.getScoreMatch()).toEqual("Set: 1,0 Game: 0,0");
+		});
 
-	it("jugador 1 puntua tras estar el marcador de juego en iguales", function(){
-		var partido = new Partido([0,0], 40, 40);
-		partido.punto(1);
-		expect(partido.getSet()).toEqual([0,0]);
-		expect(partido.getMarcadorJuego()).toEqual("VENTAJA JUGADOR 1");
-	});
-
-	it("jugador 1 puntua dos veces, una para tener ventaja y otra para ganar juego", function(){
-		var partido = new Partido([0,0], 40, 40);
-		partido.punto(1);
-		partido.punto(1);
-		expect(partido.getSet()).toEqual([1,0]);
-		expect(partido.getMarcadorJuego()).toEqual("0,0");
-	});
-
-	it("jugador 2 puntua dos veces, una para tener ventaja y otra para ganar juego", function(){
-		var partido = new Partido([0,0], 40, 40);
-		partido.punto(2);
-		partido.punto(2);
-		expect(partido.getSet()).toEqual([0,1]);
-		expect(partido.getMarcadorJuego()).toEqual("0,0");
-	});
-
-	it("jugador 2 puntua para tener ventaja y seguidamente el jugador 1 consigue iguales", function(){
-		var partido = new Partido([0,0], 40, 40);
-		partido.punto(2);
-		partido.punto(1);
-		expect(partido.getSet()).toEqual([0,0]);
-		expect(partido.getMarcadorJuego()).toEqual("IGUALES");
+		it("game point visitor player", function(){
+			match.setScoreMatch([0,0], [0,40]);
+			match.pointVisitor();
+			expect(match.getScoreMatch()).toEqual("Set: 0,1 Game: 0,0");
+		});
 	});
 });

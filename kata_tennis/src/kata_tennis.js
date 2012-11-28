@@ -1,116 +1,119 @@
-function Jugador(puntuacionInicial){
-	this.puntuacion = puntuacionInicial;
-	this.ventaja = false;
+function Game(){
+	scoreboard = [0,0];
+	LOCAL=0;
+	VISITOR=1;
 }
 
-Jugador.prototype = {
-	constructor: Jugador,
-	puntua: function(){
-		switch (this.puntuacion){
-			case 0: this.puntuacion = 15;
+Game.prototype = {
+	constructor: Game,
+	whoIsOponent: function(player){
+		var oponent = (player == VISITOR) ? LOCAL : VISITOR;
+		return oponent;
+	},
+	updateScoreboard: function(player){
+		switch(scoreboard[player]){
+			case 0:  		
+				scoreboard[player] = 15;
 				break;
-			case 15: this.puntuacion = 30;
+			case 15: 		
+				scoreboard[player] = 30;
 				break;
-			case 30: this.puntuacion = 40;
+			case 30: 
+				if(scoreboard[this.whoIsOponent(player)]== 40){
+					scoreboard = ["DEUCE","DEUCE"]; 
+				}else{
+					scoreboard[player] = 40;
+				}
 				break;
-		}
-		return this.puntuacion;
+			case 40:
+				scoreboard[player] = "WIN";
+				scoreboard[this.whoIsOponent(player)] = 0; 
+				break;
+			case "DEUCE": 	
+				scoreboard[player] = "ADVANTAGE";
+				scoreboard[this.whoIsOponent(player)] = 40; 
+				break;
+			case "ADVANTAGE":
+				scoreboard[player] = "WIN";
+				scoreboard[this.whoIsOponent(player)] = 0; 
+				break;
+		}			
+		return scoreboard;
 	},
-	setVentaja: function(ventaja){
-		this.ventaja = ventaja;
+	pointLocal: function(){
+		return this.updateScoreboard(LOCAL);
 	},
-	tieneVentaja: function(){
-		return this.ventaja;
+	pointVisitor: function(){
+		return this.updateScoreboard(VISITOR);
 	},
-	getPuntuacion: function(){
-		return this.puntuacion;
+	setScoreGame: function(score){
+		scoreboard = score;
 	},
-	setPuntuacion: function(puntos){
-		this.puntuacion = puntos;
+	getScoreGame: function(){
+		return scoreboard;
 	}
 };
 
-function Partido(setInicial, puntuacionInicialJugador1, puntuacionInicialJugador2){
-	this.set = setInicial;
-	this.jugador1 = new Jugador(puntuacionInicialJugador1);
-	this.jugador2 = new Jugador(puntuacionInicialJugador2);
-	this.JUGADOR1 = 1;
-	this.JUGADOR2 = 2;
+function Set(){
+	this.scoreboard = [0,0];
+	LOCAL = 0;
+	VISITOR = 1;
 }
 
-Partido.prototype = {
-	constructor: Partido,
-	getSet: function(){
-		return this.set;
+Set.prototype = {
+	constructor: Set,
+	localAddGame: function(){
+		this.scoreboard[LOCAL]++;
+		return this.scoreboard;
 	},
-	punto: function(numeroJugador){
-		var jugadorQuePuntua;
-		var jugadorNoPuntua;
-		var visitante = 0;
-		if(numeroJugador == this.JUGADOR1){
-			jugadorQuePuntua = this.jugador1;
-			jugadorNoPuntua = this.jugador2;
-		}else{
-			jugadorQuePuntua = this.jugador2;
-			jugadorNoPuntua = this.jugador1;
-			visitante = 1;
+	visitorAddGame: function(){
+		this.scoreboard[VISITOR]++;
+		return this.scoreboard;
+	},
+	setScoreSet: function(score){
+		this.scoreboard = score;
+	},
+	areThereWinner: function(){
+		var winner = 0;
+		if(this.scoreboard[LOCAL]==6 || this.scoreboard[VISITOR]==6){
+			winner = (this.scoreboard[LOCAL]==6) ? "LOCAL" : "VISITOR";
 		}
-		this.actualizaMarcador(jugadorQuePuntua, jugadorNoPuntua, visitante);
+		return winner;
 	},
-	actualizaMarcador: function(jugadorQuePuntua, jugadorNoPuntua, visitante){
-		if(jugadorQuePuntua.getPuntuacion() == 40){
-				if(jugadorNoPuntua.getPuntuacion() == 40){
-					if(jugadorQuePuntua.tieneVentaja()){
-						this.set[visitante]++;
-						this.iniciaJuego();
-					}else{
-						if(jugadorNoPuntua.tieneVentaja()){
-							jugadorNoPuntua.setVentaja(false);
-						}else{
-							jugadorQuePuntua.setVentaja(true);
-						}
-					}
-				}else{
-					this.set[visitante]++;
-					this.iniciaJuego();
-				}
-			}else{
-				jugadorQuePuntua.puntua();
-			}
-	},
-	getMarcadorJuego: function(){
-		if(this.jugador1.tieneVentaja()){
-			return "VENTAJA JUGADOR 1";
-		}
-		if(this.jugador2.tieneVentaja()){
-			return "VENTAJA JUGADOR 2";
-		}
-		if(this.jugador1.getPuntuacion() == 40 && this.jugador2.getPuntuacion() == 40){
-			return "IGUALES";
-		}
-		return this.jugador1.getPuntuacion().toString() + "," + this.jugador2.getPuntuacion().toString();
-	},
-	iniciaJuego: function(){
-		this.jugador1.setPuntuacion(0);
-		this.jugador2.setPuntuacion(0);
-		this.jugador1.setVentaja(false);
-		this.jugador2.setVentaja(false);
-	},
-	sigueEnJuego: function(){
-		if(this.set[0] < 6 && this.set[1] < 6){
-			return true;
-		}else{
-			return false;
-		}	
+	getScoreSet: function(){
+		return this.scoreboard;
 	}
+};
+
+function Match(){
+	this.game = new Game();
+	this.set = new Set();
 }
 
-//Inicio del partido
-var partido = new Partido([0,0], 0, 0);
-var quienPuntua = 1;
-do{
-	quienPuntua = prompt("Introduzca el numero de jugador que ha marcado un punto (1 o 2)", "1");
-	partido.punto(quienPuntua);
-	alert("Set: " + partido.getSet() + ", Juego: jugador 1, jugador 2 --> " + partido.getMarcadorJuego());
-}while(partido.sigueEnJuego());
-alert("Final del partido: " + partido.getSet())
+Match.prototype = {
+	constructor: Match,
+	setScoreMatch: function(scoreSet, scoreGame){ 
+		this.game.setScoreGame(scoreGame);
+		this.set.setScoreSet(scoreSet);
+	},
+	getScoreMatch: function(){
+		return "Set: " + this.set.getScoreSet() + " Game: " + this.game.getScoreGame();
+	},
+	endOfMatch: function(){
+		return this.set.areThereWinner();
+	},
+	pointLocal: function(){
+		this.game.pointLocal();
+		if(this.game.getScoreGame()[0] == "WIN"){
+			this.game.setScoreGame([0,0]);
+			this.set.localAddGame();
+		}
+	},
+	pointVisitor: function(){
+		this.game.pointVisitor();
+		if(this.game.getScoreGame()[1] == "WIN"){
+			this.game.setScoreGame([0,0]);
+			this.set.visitorAddGame();
+		}
+	}
+};
