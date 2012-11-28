@@ -6,9 +6,9 @@ function Game(){
 
 Game.prototype = {
 	constructor: Game,
-	whoIsOponent: function(player){
-		var oponent = (player == VISITOR) ? LOCAL : VISITOR;
-		return oponent;
+	whoIsOpponent: function(player){
+		var opponent = (player == VISITOR) ? LOCAL : VISITOR;
+		return opponent;
 	},
 	updateScoreboard: function(player){
 		switch(scoreboard[player]){
@@ -19,7 +19,7 @@ Game.prototype = {
 				scoreboard[player] = 30;
 				break;
 			case 30: 
-				if(scoreboard[this.whoIsOponent(player)]== 40){
+				if(scoreboard[this.whoIsOpponent(player)]== 40){
 					scoreboard = ["DEUCE","DEUCE"]; 
 				}else{
 					scoreboard[player] = 40;
@@ -27,15 +27,15 @@ Game.prototype = {
 				break;
 			case 40:
 				scoreboard[player] = "WIN";
-				scoreboard[this.whoIsOponent(player)] = 0; 
+				scoreboard[this.whoIsOpponent(player)] = 0; 
 				break;
 			case "DEUCE": 	
 				scoreboard[player] = "ADVANTAGE";
-				scoreboard[this.whoIsOponent(player)] = 40; 
+				scoreboard[this.whoIsOpponent(player)] = 40; 
 				break;
 			case "ADVANTAGE":
 				scoreboard[player] = "WIN";
-				scoreboard[this.whoIsOponent(player)] = 0; 
+				scoreboard[this.whoIsOpponent(player)] = 0; 
 				break;
 		}			
 		return scoreboard;
