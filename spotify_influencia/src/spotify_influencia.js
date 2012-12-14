@@ -24,13 +24,49 @@ Spotify.prototype = {
 	eliminaParejasRepresentadasPor: function(person1, person2, teams, candidatos){
 		person1 = this.ordena(person1);
 		person2 = this.ordena(person2);
-		var candidato = (person1[0][1] >= person2[0][1]) ? person1[0][0] : person2[0][0];
-		candidatos[candidatos.length] = candidato;
-		console.log("candidatos: " + candidatos);
 		while(teams.length > 0){
-			teams.pop();
+			console.log("candidatos_bucle: " + candidatos);
+			var candidato = (person1[0][1] >= person2[0][1]) ? person1[0][0] : person2[0][0];
+			console.log("candidatosactual: " + candidato);
+			candidatos[candidatos.length] = candidato;
+			if(person1[0][1] >= person2[0][1]){
+				console.log("person1_prev" + person1);
+				person1.splice(0,1);
+				console.log("person1_post" + person1);
+				//var count = teams.length;
+				for(var i = 0; i < teams.length; i++){
+					console.log("teams_prev" + teams);
+					if(teams[i][0] == candidato){
+						teams.splice(i,1);
+						i--;
+					}
+					console.log("teams_post" + teams);
+				}
+			}else{
+				console.log("person1_prev" + person1);
+				console.log("condicion 2");
+				console.log("person2_prev" + person2);
+				person2.splice(0,1);
+				console.log("person2_post" + person2);
+				for(var i = 0; i < teams.length; i++){
+					console.log("teams_prev" + teams);
+					if(teams[i][1] == candidato){
+						/*for(var j = 0; j < person1.length; j++){
+							if(teams[i][0] == person1[j][0]){
+								person1.splice(j,1);
+								j--;
+							}
+						}*/
+						teams.splice(i,1);
+						i--;
+					}
+					console.log("teams_post" + teams);
+				}
+			}
 		}
+		
 		console.log("teams: " + teams);
+		console.log("candidatos: " + candidatos);
 		return candidatos;
 		//TODO: eliminar parejas de teams en el que aparezca candidato. Y eliminar candidato de person1 o person2 segun corresponda.
 	},

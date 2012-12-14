@@ -4,7 +4,7 @@ describe("Spotify influencia", function(){
 		spotify = new Spotify();
 	});
 
-	it("[1009, 2011] [1017, 2011] should return 2011", function(){
+	/*it("[1009, 2011] [1017, 2011] should return 2011", function(){
 		var teams = new Array ([1009, 2011], [1017, 2011]);
 		expect(spotify.whoGoesToTheBeach(teams)).toEqual([2011]);
 	});
@@ -37,5 +37,25 @@ describe("Spotify influencia", function(){
 		
 		var result = spotify.ordena(teams);
 		expect(result).toEqual([[1006, 3], [1005, 2], [1011, 2], [1009, 1]]);
+	});
+
+	it("[1009, 2011] [1017, 2011] [1010, 2011] should return 2011", function(){
+		var teams = new Array ([1009, 2011], [1017, 2011], [1010, 2011]);
+		expect(spotify.whoGoesToTheBeach(teams)).toEqual([2011]);
+	});
+
+	it("[1009, 2011] [1017, 2011] [1010, 2012] should return [2011, 1010]", function(){
+		var teams = new Array ([1009, 2011], [1017, 2011], [1010, 2012]);
+		expect(spotify.whoGoesToTheBeach(teams)).toEqual([2011, 1010]);
+	});
+
+	it("[1009, 2011] [1009, 2006] [1010, 2012] [1012, 2014] should return [1009, 1010]", function(){
+		var teams = new Array ([1009, 2011], [1010, 2012], [1009, 2006], [1012, 2012]);
+		expect(spotify.whoGoesToTheBeach(teams)).toEqual([1009, 2012]);
+	});*/
+
+	it(" should return ", function(){
+		var teams = new Array ([1011, 2009], [1011, 2017], [1012, 2010]);
+		expect(spotify.whoGoesToTheBeach(teams)).toEqual([1011, 2010]);
 	});
 });
