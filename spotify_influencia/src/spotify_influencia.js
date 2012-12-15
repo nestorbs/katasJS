@@ -37,6 +37,12 @@ Spotify.prototype = {
 				for(var i = 0; i < teams.length; i++){
 					console.log("teams_prev" + teams);
 					if(teams[i][0] == candidato){
+						for(var j = 0; j < person2.length; j++){
+							if(teams[i][1] == person2[j][0]){
+								person2.splice(j,1);
+								j--;
+							}
+						}
 						teams.splice(i,1);
 						i--;
 					}
@@ -51,12 +57,12 @@ Spotify.prototype = {
 				for(var i = 0; i < teams.length; i++){
 					console.log("teams_prev" + teams);
 					if(teams[i][1] == candidato){
-						/*for(var j = 0; j < person1.length; j++){
+						for(var j = 0; j < person1.length; j++){
 							if(teams[i][0] == person1[j][0]){
 								person1.splice(j,1);
 								j--;
 							}
-						}*/
+						}
 						teams.splice(i,1);
 						i--;
 					}
@@ -68,7 +74,6 @@ Spotify.prototype = {
 		console.log("teams: " + teams);
 		console.log("candidatos: " + candidatos);
 		return candidatos;
-		//TODO: eliminar parejas de teams en el que aparezca candidato. Y eliminar candidato de person1 o person2 segun corresponda.
 	},
 	whoGoesToTheBeach: function(teams){
 		var count = teams.length;
