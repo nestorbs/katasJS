@@ -1,7 +1,6 @@
 function Spotify (){
 	
 }
-
 Spotify.prototype = {
 	constructor: Spotify,
 	anadePerson: function(person, listPerson){
@@ -21,6 +20,22 @@ Spotify.prototype = {
 	ordena: function(vector){
 		return vector.sort(this.compare);
 	},
+	borraParejasYaRepresentadas: function(listContieneCandidato, listNoContieneCandidato, teams, positionInTeamCandidato, candidato){
+		var positionInTeamNoCandidato = (positionInTeamCandidato == 0) ? 1 : 0;
+		listContieneCandidato.splice(0,1);
+		for(var i = 0; i < teams.length; i++){
+			if(teams[i][positionInTeamCandidato] == candidato){
+				for(var j = 0; j < listNoContieneCandidato.length; j++){
+					if(teams[i][positionInTeamNoCandidato] == listNoContieneCandidato[j][0]){
+						listNoContieneCandidato.splice(j,1);
+						j--;
+					}
+				}
+				teams.splice(i,1);
+				i--;
+			}
+		}
+	},
 	eliminaParejasRepresentadasPor: function(person1, person2, teams, candidatos){
 		person1 = this.ordena(person1);
 		person2 = this.ordena(person2);
@@ -28,33 +43,9 @@ Spotify.prototype = {
 			var candidato = (person1[0][1] >= person2[0][1]) ? person1[0][0] : person2[0][0];
 			candidatos[candidatos.length] = candidato;
 			if(person1[0][1] >= person2[0][1]){
-				person1.splice(0,1);
-				for(var i = 0; i < teams.length; i++){
-					if(teams[i][0] == candidato){
-						for(var j = 0; j < person2.length; j++){
-							if(teams[i][1] == person2[j][0]){
-								person2.splice(j,1);
-								j--;
-							}
-						}
-						teams.splice(i,1);
-						i--;
-					}
-				}
+				this.borraParejasYaRepresentadas(person1, person2, teams, 0, candidato);
 			}else{
-				person2.splice(0,1);
-				for(var i = 0; i < teams.length; i++){
-					if(teams[i][1] == candidato){
-						for(var j = 0; j < person1.length; j++){
-							if(teams[i][0] == person1[j][0]){
-								person1.splice(j,1);
-								j--;
-							}
-						}
-						teams.splice(i,1);
-						i--;
-					}
-				}
+				this.borraParejasYaRepresentadas(person2, person1, teams, 1, candidato);
 			}
 		}
 		return candidatos;
